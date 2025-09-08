@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Steampunk Lever Size Converter — EU → US</title>
+<style>
+  :root{
+    --bg:#20160f; --panel:#2b2119; --accent:#b98a2f; --metal:#8b6b3a; --text:#f3e9de;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;}
+  body{background:radial-gradient(circle at 10% 10%,#2a1f17 0%, #13100d 60%), #130f0c;color:var(--text);display:flex;align-items:center;justify-content:center;padding:24px}
+  .frame{width:920px;max-width:96%;background:linear-gradient(180deg,var(--panel),#241b15);border:6px solid rgba(139,107,58,0.35);box-shadow:0 10px 40px rgba(0,0,0,0.7);border-radius:14px;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:18px}
+  .left{padding:18px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:10px;position:relative;overflow:hidden;z-index:1}
+  h1{margin:0 0 8px;font-size:20px;letter-spacing:0.6px}
+  p.lead{margin:0 0 16px;color:#d9cdbd;font-size:13px}
+  label{display:block;font-size:12px;margin:8px 0 6px;color:#e9decf}
+  select,input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:#2b2119;color:var(--text);font-size:14px;position:relative;z-index:2}
+  .row{display:flex;gap:12px}
+  .row > *{flex:1}
+  .result-box{margin-top:14px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(0,0,0,0.15),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.02)}
+  .big-result{font-size:28px;color:var(--accent);font-weight:700}
+  .gear-bg{position:absolute;right:-40px;bottom:-40px;opacity:0.06;transform:rotate(23deg);z-index:0;pointer-events:none}
+
+  /* right rail (lever side) */
+  .right{padding:20px;border-left:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+  .machine{width:320px;height:320px;background:linear-gradient(180deg,#2a2018,#221813);border-radius:12px;padding:18px;box-shadow:inset 0 -6px 20px rgba(0,0,0,0.5)}
+  .machine .panel{width:100%;height:100%;position:relative}
+  /* lever */
+  .lever-area{position:absolute;right:20px;bottom:28px;width:120px;height:220px;display:flex;align-items:flex-end;justify-content:center}
+  .lever-base{width:100px;height:20px;background:linear-gradient(180deg,#3a2e24,#241a13);border-radius:8px;border:3px solid rgba(0,0,0,0.6);box-shadow:0 6px 12px rgba(0,0,0,0.6) inset}
+  .lever-arm{position:absolute;bottom:20px;left:12px;transform-origin:18px 80%;width:12px;height:130px;background:linear-gradient(180deg,#6f5636,#3f2a18);border-radius:8px;box-shadow:0 6px 14px rgba(0,0,0,0.5)}
+  .lever-knob{position:absolute;left:-12px;top:-22px;width:48px;height:48px;border-radius:50%;background:linear-gradient(180deg,#caa86a,#8a6a3a);border:4px solid #3a2b1a;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+  .hint{font-size:12px;color:#cdb89c;margin-top:10px}
+  button.primary{margin-top:12px;padding:10px 14px;border-radius:8px;border:0;background:linear-gradient(180deg,var(--accent),#8b5f18);color:#1b0f00;font-weight:700;cursor:pointer}
+  .small{font-size:12px;color:#cdb89c}
+  footer{font-size:12px;margin-top:10px;color:#bfb1a0}
+
+  svg.gear{width:360px;height:360px}
+  :focus{outline:3px solid rgba(185,138,47,0.18);outline-offset:3px}
+
+  @media (max-width:880px){.frame{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+  <div class="frame" role="application" aria-label="Steampunk EU to US Size Converter">
+    <div class="left">
+      <h1>Steampunk Lever Size Converter</h1>
+      <p class="lead">Pick a category and an EU size, then pull the lever (or press <kbd>Enter</kbd>) to convert to the approximate US size. Sizes vary by brand — use as a guideline.</p>
+
+      <label for="category">Category</label>
+      <select id="category" aria-controls="sizeInput" aria-label="Select clothing category">
+        <option value="women">Women — dresses/tops</option>
+        <option value="men_pants">Men — pants (waist)</option>
+        <option value="men_jacket">Men — jackets (chest)</option>
+        <option value="children">Children — EU = height (cm)</option>
+      </select>
+
+      <div style="margin-top:10px" id="sizeInputWrap">
+        <label for="euSize">EU Size (number)</label>
+        <input id="euSize" type="number" min="20" max="140" step="1" value="38" aria-label="Enter EU size">
+      </div>
+
+      <div class="result-box" aria-live="polite">
+        <div>Result</div>
+        <div class="big-result" id="resultText">—</div>
+        <div class="small">Note: conversions are approximate. Toggle category for different conversion rules.</div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+        <button class="primary" id="convertBtn">Convert (Pull Lever)</button>
+        <div class="hint">Or drag/click the lever on the right</div>
+      </div>
+
+      <footer>
+        Includes built-in conversion tables for common sizes (women) and simple formulas for men. Children sizes use height-based mapping. Packaged examples below for desktop apps.
+      </footer>
+
+      <svg class="gear-bg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="256" cy="256" r="200" fill="#caa86a" />
+      </svg>
+    </div>
+
+    <aside class="right">
+      <div class="machine" role="region" aria-label="Mechanical lever machine">
+        <div class="panel">
+          <svg style="position:absolute;left:12px;top:12px;width:160px;opacity:0.9" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#cba86a"/><stop offset="1" stop-color="#8a693c"/></linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="64" fill="url(#g1)" stroke="#3a2b1a" stroke-width="6"/>
+            <text x="100" y="108" font-size="20" text-anchor="middle" fill="#1b0f00">SIZE</text>
+          </svg>
+
+          <div class="lever-area" id="leverArea">
+            <div class="lever-base" aria-hidden="true"></div>
+            <div class="lever-arm" id="leverArm" role="slider" tabindex="0"
+              aria-label="Conversion lever" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+              <div class="lever-knob" id="leverKnob">⇩</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="hint" style="text-align:center;margin-top:14px">Accessible — works with keyboard. Press <kbd>Enter</kbd> or <kbd>Space</kbd> when the lever is focused.</div>
+
+      <div style="margin-top:18px;width:100%;background:linear-gradient(180deg,#2b2119,#241a13);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)">
+        <strong style="color:var(--accent)">Packaging</strong>
+        <div class="small">Save this file as <code>index.html</code>. To make a desktop app bundle, you can wrap it with <code>Electron</code> or <code>Tauri</code>. Instructions below the app file (in this project file).</div>
+      </div>
+    </aside>
+  </div>
+
+<script>
+const womenMap = new Map([[32,0],[34,2],[36,4],[38,6],[40,8],[42,10],[44,12],[46,14],[48,16]]);
+const childrenMap = new Map([[50,'Newborn'],[56,'0-1 mo'],[62,'1-3 mo'],[68,'3-6 mo'],[74,'6-9 mo'],[80,'9-12 mo'],[86,'12-18 mo'],[92,'2T'],[98,'3T'],[104,'4T'],[110,'5T']]);
+function convert(eu, category){
+  eu = Number(eu);
+  if (!eu || isNaN(eu)) return {ok:false, text:'Enter a valid EU size'};
+  if (category === 'women'){
+    if (womenMap.has(eu)) return {ok:true, text:`US ${womenMap.get(eu)}`};
+    return {ok:true, text:`≈ US ${Math.round((eu-30)/2)}`};
+  }
+  if (category === 'men_pants'){ return {ok:true,text:`≈ US ${eu-16} (waist inches)`}; }
+  if (category === 'men_jacket'){ return {ok:true,text:`≈ US ${eu-10} (chest inches)`}; }
+  if (category === 'children'){
+    const keys = Array.from(childrenMap.keys());
+    let best = keys.reduce((a,b)=> Math.abs(a-eu) < Math.abs(b-eu) ? a : b);
+    return {ok:true,text:`EU ${best} → US ${childrenMap.get(best)}`};
+  }
+  return {ok:false,text:'Unknown category'};
+}
+
+const euInput=document.getElementById('euSize');
+const categorySel=document.getElementById('category');
+const resultText=document.getElementById('resultText');
+const convertBtn=document.getElementById('convertBtn');
+const leverArm=document.getElementById('leverArm');
+const leverArea=document.getElementById('leverArea');
+
+function showResult(obj){ resultText.textContent=obj.text; }
+function doConvert(){ const eu=euInput.value; const cat=categorySel.value; showResult(convert(eu,cat)); animateLever(); }
+convertBtn.addEventListener('click',doConvert);
+leverArm.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();doConvert();}});
+leverArea.addEventListener('click',doConvert);
+function animateLever(){ leverArm.style.transition='transform 250ms'; leverArm.style.transform='rotate(-55deg)'; setTimeout(()=>{leverArm.style.transform='rotate(0deg)';},500);} 
+showResult({ok:true,text:'Set category and EU size, then pull lever'});
+</script>
+</body>
+</html>
