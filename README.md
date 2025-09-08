@@ -2,7 +2,8 @@
 
 A vintage-steampunk-style web app that converts European (EU) clothing sizes to their approximate US equivalents. Users pull a mechanical lever to execute the conversion — just like an old machine!
 
-![Steampunk Lever UI](screenshot.png)  
+![Steampunk Lever UI](Steampunk_Resizer/screenshot.png)
+  
 *Example of the app interface with lever and gears.*
 
 ---
@@ -72,5 +73,3 @@ Feel free to open an issue or submit a pull request.
 ## License
 
 This project is open-source under the MIT License.
-
-![Steampunk Lever UI](Steampunk_Resizer/screenshot.png)
