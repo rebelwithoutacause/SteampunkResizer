@@ -31,8 +31,6 @@ A vintage-steampunk-style web app that converts European (EU) clothing sizes to 
 - **Men Jackets**: US chest = EU size − 10  
 - **Children**: EU size matched to approximate age/height categories  
 
-> ⚠️ Conversions are approximate and intended as guidelines.
-
 ---
 
 ## Usage
